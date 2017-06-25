@@ -39,19 +39,19 @@ def processRequest(req):
     if req.get("result").get("action") != "fdaadverseevents":
         return {}
     baseurl = "https://api.fda.gov/drug/event.json?"
-    event.json_query = makeEvent.jsonQuery(req)
-    if event.json_query is None:
+    eventjson_query = makeEventjsonQuery(req)
+    if eventjson_query is None:
         return {}
-    event.json_url = baseurl + urlencode({'q': event.json_query}) + "&format=json"
-    result = urlopen(event.json_url).read()
+    eventjson_url = baseurl + urlencode({'q': eventjson_query}) + "&format=json"
+    result = urlopen(eventjson_url).read()
     data = json.loads(result)
     res = makeWebhookResult(data)
     return res
 
 
-def makeEvent.jsonQuery(req):
+def makeEventjsonQuery(req):
     result = req.get("result")
-    
+    return result
 
 
 def makeWebhookResult(data):
@@ -62,6 +62,7 @@ def makeWebhookResult(data):
     result = query.get('results')
     if result is None:
         return {}
+
 
     
     # print(json.dumps(item, indent=4))
@@ -76,7 +77,7 @@ def makeWebhookResult(data):
         "displayText": speech,
         # "data": data,
         # "contextOut": [],
-        "source": "test"
+        "source": "apiai-weather-webhook-sample"
     }
 
 
